@@ -3,15 +3,17 @@ package main
 import (
 	"bowling-game/bowling"
 	"bowling-game/gui"
-	"fmt"
+	"math/rand"
+	"time"
 )
 
 const NumberOfFrames = 10
-const NumberOfPins = 10
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func main() {
-	fmt.Println("hello to bowling!")
-
 	var playedFrames []*bowling.Frame
 
 	var previousFrame *bowling.Frame

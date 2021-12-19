@@ -1,8 +1,11 @@
 package bowling
 
-import "errors"
+import (
+	"math/rand"
+)
 
 const RollsPerFrame = 2
+const NumberOfPins = 10
 
 type Frame struct {
 	PreviousFrame *Frame
@@ -11,16 +14,14 @@ type Frame struct {
 	Points        int
 }
 
-func (f *Frame) ExecuteRolls() error {
-	if f.KnockDowns != nil {
-		return errors.New("the frame was already played")
-	}
-
-	for currRollNumber := 0; currRollNumber < RollsPerFrame; currRollNumber++ {
-		knockedDownPins := 7
+func (f *Frame) ExecuteRolls() {
+	for rollNr := 0; rollNr < RollsPerFrame; rollNr++ {
+		knockedDownPins := doTheRoll(NumberOfPins - f.Points)
 		f.KnockDowns = append(f.KnockDowns, knockedDownPins)
 		f.Points += knockedDownPins
 	}
+}
 
-	return nil
+func doTheRoll(standingPins int) int {
+	return rand.Intn(standingPins + 1)
 }
