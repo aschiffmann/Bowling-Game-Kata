@@ -13,6 +13,11 @@ func init() {
 }
 
 func main() {
+	game := playNewGame()
+	printResults(game)
+}
+
+func playNewGame() []*frame {
 	var game []*frame
 	var previousFrame *frame
 
@@ -22,8 +27,7 @@ func main() {
 		game = append(game, currFrame)
 		previousFrame = currFrame
 	}
-
-	printResults(game)
+	return game
 }
 
 func playNewFrame(frameNr int, previousFrame *frame) *frame {

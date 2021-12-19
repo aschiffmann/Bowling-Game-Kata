@@ -14,12 +14,17 @@ func (f *frame) roll(standingPins int) int {
 		f.knockDowns = append(f.knockDowns, -1)
 		return 0
 	} else {
-		knockedDownPins := rand.Intn(standingPins + 1)
+		knockedDownPins := getKnockedDownPins(standingPins)
 		f.knockDowns = append(f.knockDowns, knockedDownPins)
 		f.points += knockedDownPins
 
 		return knockedDownPins
 	}
+
+}
+
+var getKnockedDownPins = func(standingPins int) int {
+	return rand.Intn(standingPins + 1)
 }
 
 func (f *frame) addApplicableBonusPoints(sourceRollNr int, knockedDownPins int) {
