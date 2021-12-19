@@ -58,6 +58,15 @@ func (f *Frame) HadStrike() bool {
 	return f.KnockDowns[0] == NumberOfPins || len(f.KnockDowns) > 1 && f.KnockDowns[1] == NumberOfPins
 }
 
+func (f *Frame) GetTotalPoints() int {
+	result := f.Points
+	if f.PreviousFrame != nil {
+		result += f.PreviousFrame.GetTotalPoints()
+	}
+
+	return result
+}
+
 func doTheRoll(standingPins int) int {
 	return rand.Intn(standingPins + 1)
 }

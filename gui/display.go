@@ -22,36 +22,41 @@ func printLine1(frame *bowling.Frame) {
 	var firstScore string
 	var secondScore string
 	if frame.KnockDowns[0] == bowling.NumberOfPins {
-		firstScore = " X"
-		secondScore = " -"
+		firstScore = "X"
+		secondScore = "-"
 	} else {
-		firstScore = fmt.Sprintf(" %d", frame.KnockDowns[0])
+		firstScore = fmt.Sprintf("%d", frame.KnockDowns[0])
 		if frame.KnockDowns[1] == bowling.NumberOfPins {
-			secondScore = " X"
+			secondScore = "X"
 		} else if frame.HadSpare() {
-			secondScore = " /"
+			secondScore = "/"
 		} else {
-			secondScore = fmt.Sprintf(" %d", frame.KnockDowns[1])
+			secondScore = fmt.Sprintf("%d", frame.KnockDowns[1])
 		}
 	}
 
 	var thirdScore string
 	if len(frame.KnockDowns) == 3 {
 		if frame.KnockDowns[2] == bowling.NumberOfPins {
-			thirdScore = " X"
+			thirdScore = "X"
 		} else if !frame.HadSpare() && frame.Points == bowling.NumberOfPins {
-			thirdScore = " /"
+			thirdScore = "/"
 		} else {
-			thirdScore = fmt.Sprintf("  %d", frame.KnockDowns[2])
+			thirdScore = fmt.Sprintf(" %d", frame.KnockDowns[2])
 		}
 	}
 
-	fmt.Printf("%s %s%s | ", firstScore, secondScore, thirdScore)
+	fmt.Printf("%s  %s%s | ", firstScore, secondScore, thirdScore)
 }
 
 func printLine3(frame *bowling.Frame) {
-	if frame.Points < 10 {
+	totalPoints := frame.GetTotalPoints()
+	if totalPoints < 10 {
 		fmt.Print(" ")
 	}
-	fmt.Printf("  %d    ", frame.Points)
+	fmt.Printf(" %d   ", totalPoints)
+
+	if totalPoints < 100 {
+		fmt.Printf(" ")
+	}
 }
