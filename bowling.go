@@ -23,7 +23,6 @@ func playNewGame() []*frame {
 
 	for frameNr := 1; frameNr <= totalFrames; frameNr++ {
 		currFrame := playNewFrame(frameNr, previousFrame)
-
 		game = append(game, currFrame)
 		previousFrame = currFrame
 	}
@@ -43,10 +42,7 @@ func playNewFrame(frameNr int, previousFrame *frame) *frame {
 		knockDowns2 = currFrame.roll(totalPins)
 	}
 
-	if previousFrame != nil {
-		previousFrame.addApplicableBonusPoints(2, knockDowns2)
-		previousFrame.addApplicableBonusPoints(1, knockDowns1)
-	}
+	currFrame.addApplicableBonusPoints(knockDowns1, knockDowns2)
 
 	if (currFrame.hadStrike() || currFrame.hadSpare()) && isLastFrame {
 		currFrame.roll(totalPins)

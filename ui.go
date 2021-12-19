@@ -64,7 +64,7 @@ func printTotalPointsLine(frame *frame) {
 
 func getScoreDisplay(score int) string {
 	switch score {
-	case 0, -1:
+	case 0:
 		return noScoreDisplay
 	case totalPins:
 		return strikeDisplay

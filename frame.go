@@ -7,26 +7,26 @@ type frame struct {
 }
 
 func (f *frame) roll(standingPins int) int {
-	if standingPins == 0 {
-		f.knockDowns = append(f.knockDowns, -1)
-		return 0
-	} else {
-		knockedDownPins := getKnockedDownPins(standingPins)
-		f.knockDowns = append(f.knockDowns, knockedDownPins)
-		f.points += knockedDownPins
+	knockedDownPins := getKnockedDownPins(standingPins)
+	f.knockDowns = append(f.knockDowns, knockedDownPins)
+	f.points += knockedDownPins
 
-		return knockedDownPins
-	}
-
+	return knockedDownPins
 }
 
-func (f *frame) addApplicableBonusPoints(sourceRollNr int, knockedDownPins int) {
-	if f.hadSpare() && sourceRollNr == 1 || f.hadStrike() {
-		f.points += knockedDownPins
-	}
+func (f *frame) addApplicableBonusPoints(knockDownsRoll1 int, knockDownsRoll2 int) {
+	if prev := f.previousFrame; prev != nil {
+		if prev.hadSpare() {
+			prev.points += knockDownsRoll1
+		}
 
-	if sourceRollNr == 1 && f.hadStrike() && f.previousFrame != nil && f.previousFrame.hadStrike() {
-		f.previousFrame.points += knockedDownPins
+		if prev.hadStrike() {
+			prev.points += knockDownsRoll1 + knockDownsRoll2
+
+			if prev.previousFrame != nil && prev.previousFrame.hadStrike() {
+				prev.previousFrame.points += knockDownsRoll1
+			}
+		}
 	}
 }
 
