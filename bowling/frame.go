@@ -1,6 +1,7 @@
 package bowling
 
 import (
+	"bowling-game/config"
 	"math/rand"
 )
 
@@ -15,15 +16,32 @@ type Frame struct {
 }
 
 func (f *Frame) ExecuteRolls() {
-	for rollNr := 0; rollNr < RollsPerFrame; rollNr++ {
-		knockedDownPins := doTheRoll(NumberOfPins - f.Points)
+	knockedDownPins := doTheRoll(NumberOfPins - f.Points)
+	f.KnockDowns = append(f.KnockDowns, knockedDownPins)
+	f.Points += knockedDownPins
+
+	if f.PreviousFrame != nil {
+		f.PreviousFrame.addBonusPoints(1, knockedDownPins)
+	}
+
+	if !f.HadStrike() {
+		knockedDownPins = doTheRoll(NumberOfPins - f.Points)
 		f.KnockDowns = append(f.KnockDowns, knockedDownPins)
 		f.Points += knockedDownPins
 
 		if f.PreviousFrame != nil {
-			f.PreviousFrame.addBonusPoints(rollNr+1, knockedDownPins)
+			f.PreviousFrame.addBonusPoints(2, knockedDownPins)
 		}
+	} else {
+		f.KnockDowns = append(f.KnockDowns, -1)
 	}
+
+	if (f.HadStrike() || f.HadSpare()) && f.FrameNr == config.NumberOfFrames {
+		knockedDownPins = doTheRoll(NumberOfPins)
+		f.KnockDowns = append(f.KnockDowns, knockedDownPins)
+		f.Points += knockedDownPins
+	}
+
 }
 
 func (f *Frame) addBonusPoints(rollNr int, knockedDownPins int) {
@@ -37,7 +55,7 @@ func (f *Frame) HadSpare() bool {
 }
 
 func (f *Frame) HadStrike() bool {
-	return f.KnockDowns[0] == NumberOfPins || f.KnockDowns[1] == NumberOfPins
+	return f.KnockDowns[0] == NumberOfPins || len(f.KnockDowns) > 1 && f.KnockDowns[1] == NumberOfPins
 }
 
 func doTheRoll(standingPins int) int {
