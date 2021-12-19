@@ -21,14 +21,14 @@ func PrintFrames(frames []*bowling.Frame) {
 func printLine1(frame *bowling.Frame) {
 	var firstScore string
 	var secondScore string
-	if frame.KnockDowns[0] == 10 {
+	if frame.KnockDowns[0] == bowling.NumberOfPins {
 		firstScore = " X"
 		secondScore = "  "
 	} else {
 		firstScore = fmt.Sprintf(" %d", frame.KnockDowns[0])
-		if frame.KnockDowns[1] == 10 {
+		if frame.KnockDowns[1] == bowling.NumberOfPins {
 			secondScore = " X"
-		} else if frame.Points == 10 {
+		} else if frame.HadSpare() {
 			secondScore = " /"
 		} else {
 			secondScore = fmt.Sprintf(" %d", frame.KnockDowns[1])
@@ -39,7 +39,7 @@ func printLine1(frame *bowling.Frame) {
 }
 
 func printLine3(frame *bowling.Frame) {
-	if frame.Points != 10 {
+	if frame.Points < 10 {
 		fmt.Print(" ")
 	}
 	fmt.Printf("  %d    ", frame.Points)
