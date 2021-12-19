@@ -1,3 +1,3 @@
-module bowling-game
+module bowling
 
 go 1.17

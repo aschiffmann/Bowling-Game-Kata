@@ -1,27 +1,45 @@
 package main
 
 import (
-	"bowling-game/bowling"
-	"bowling-game/config"
-	"bowling-game/gui"
 	"math/rand"
 	"time"
 )
+
+const totalFrames = 10
+const totalPins = 10
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
-	var playedFrames []*bowling.Frame
+	var game []*frame
+	var previousFrame *frame
 
-	var previousFrame *bowling.Frame
-	for currFrameNr := 1; currFrameNr <= config.NumberOfFrames; currFrameNr++ {
-		currFrame := bowling.Frame{PreviousFrame: previousFrame, FrameNr: currFrameNr}
-		currFrame.ExecuteRolls()
-		playedFrames = append(playedFrames, &currFrame)
-		previousFrame = &currFrame
+	for frameNr := 1; frameNr <= totalFrames; frameNr++ {
+		currFrame := playNewFrame(frameNr, previousFrame)
+
+		game = append(game, currFrame)
+		previousFrame = currFrame
 	}
 
-	gui.PrintFrames(playedFrames)
+	printResults(game)
+}
+
+func playNewFrame(frameNr int, previousFrame *frame) *frame {
+	currFrame := frame{previousFrame: previousFrame}
+
+	knockDowns1 := currFrame.roll(totalPins)
+	knockDowns2 := currFrame.roll(totalPins - knockDowns1)
+
+	if previousFrame != nil {
+		previousFrame.addApplicableBonusPoints(1, knockDowns1)
+		previousFrame.addApplicableBonusPoints(2, knockDowns2)
+	}
+
+	if (currFrame.hadStrike() || currFrame.hadSpare()) && frameNr == totalFrames {
+		currFrame.roll(totalPins)
+	}
+
+	return &currFrame
 }
