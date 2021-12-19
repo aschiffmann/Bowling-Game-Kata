@@ -10,6 +10,7 @@ const noScoreDisplay = "-"
 
 func printResults(frames []*frame) {
 	fmt.Println("----  Bowling-Results  ----")
+	fmt.Println()
 	for _, f := range frames {
 		printScoresLine(f)
 	}
@@ -18,6 +19,11 @@ func printResults(frames []*frame) {
 	for _, f := range frames {
 		printTotalPointsLine(f)
 	}
+
+	fmt.Println()
+	fmt.Println()
+	fmt.Print("press any key to exit...")
+	fmt.Scanf("h")
 }
 
 func printScoresLine(f *frame) {
