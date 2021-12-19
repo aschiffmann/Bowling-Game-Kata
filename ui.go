@@ -32,8 +32,10 @@ func printScoresLine(f *frame) {
 	var secondScore string
 	if f.hadSpare() {
 		secondScore = spareDisplay
-	} else {
+	} else if len(f.knockDowns) > 1 {
 		secondScore = getScoreDisplay(f.knockDowns[1])
+	} else {
+		secondScore = " "
 	}
 
 	var thirdScore string
@@ -62,7 +64,7 @@ func printTotalPointsLine(frame *frame) {
 
 func getScoreDisplay(score int) string {
 	switch score {
-	case -1:
+	case 0, -1:
 		return noScoreDisplay
 	case totalPins:
 		return strikeDisplay

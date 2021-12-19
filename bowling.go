@@ -31,19 +31,30 @@ func playNewGame() []*frame {
 }
 
 func playNewFrame(frameNr int, previousFrame *frame) *frame {
+	isLastFrame := frameNr == totalFrames
 	currFrame := frame{previousFrame: previousFrame}
 
 	knockDowns1 := currFrame.roll(totalPins)
-	knockDowns2 := currFrame.roll(totalPins - knockDowns1)
 
-	if previousFrame != nil {
-		previousFrame.addApplicableBonusPoints(1, knockDowns1)
-		previousFrame.addApplicableBonusPoints(2, knockDowns2)
+	var knockDowns2 int
+	if !currFrame.hadStrike() {
+		knockDowns2 = currFrame.roll(totalPins - knockDowns1)
+	} else if isLastFrame {
+		knockDowns2 = currFrame.roll(totalPins)
 	}
 
-	if (currFrame.hadStrike() || currFrame.hadSpare()) && frameNr == totalFrames {
+	if previousFrame != nil {
+		previousFrame.addApplicableBonusPoints(2, knockDowns2)
+		previousFrame.addApplicableBonusPoints(1, knockDowns1)
+	}
+
+	if (currFrame.hadStrike() || currFrame.hadSpare()) && isLastFrame {
 		currFrame.roll(totalPins)
 	}
 
 	return &currFrame
+}
+
+var getKnockedDownPins = func(standingPins int) int {
+	return rand.Intn(standingPins + 1)
 }
